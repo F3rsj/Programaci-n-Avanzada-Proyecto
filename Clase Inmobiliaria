@@ -6,37 +6,37 @@ import java.util.Map;
 public class Inmobiliaria {
     private String nombre;
     private final List<Proyecto> proyectos;
-    private final Map<String, Proyecto> proyectosMap;
+    private final Map<String, Proyecto> proyectosPorNombre;
 
     public Inmobiliaria(String nombre) {
         this.nombre = nombre;
         this.proyectos = new ArrayList<>();
-        this.proyectosMap = new HashMap<>();
+        this.proyectosPorNombre = new HashMap<>();
     }
 
-    public void agregarProyecto(Proyecto proyecto) {
-        proyectos.add(proyecto);
-        proyectosMap.put(proyecto.getNombre(), proyecto);
+    public String getNombre() { 
+        return nombre; 
+    }
+    public void setNombre(String nombre) { 
+        this.nombre = nombre; 
+    }
+
+    public List<Proyecto> getProyectos() { 
+        return proyectos; 
+    }
+
+    public void agregarProyecto(Proyecto p) {
+        proyectos.add(p);
+        proyectosPorNombre.put(p.getNombre(), p);
     }
 
     public Proyecto buscarProyectoPorNombre(String nombre) {
-        return proyectosMap.get(nombre);
+        return proyectosPorNombre.get(nombre);
     }
 
     public void listarProyectos() {
-        System.out.println(" Proyectos de la inmobiliaria " + nombre + ":");
-        for (Proyecto p : proyectos) {
-            System.out.println(" - " + p.getNombre() + " (" + p.getDepartamentos().size() + " departamentos)");
+        for (int i = 0; i < proyectos.size(); i++) {
+            proyectos.get(i).mostrarInfo();
         }
-    }
-    public String getNombre() {
-        return nombre;
-    }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public List<Proyecto> getProyectos() {
-        return proyectos;
     }
 }
