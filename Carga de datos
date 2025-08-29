@@ -1,0 +1,19 @@
+public class CargaDatos {
+
+    public static void cargarDatosIniciales(Inmobiliaria inmobiliaria) {
+        Cliente c1 = new Cliente("11111111-1", "Juan Pérez", 50000000);
+        Cliente c2 = new Cliente("22222222-2", "María López", 70000000);
+
+        Departamento d1 = new Departamento(40000000);
+        Departamento d2 = new Departamento(60000000);
+
+        d1.agregarCliente(c1);
+        d2.agregarCliente(c2);
+
+        Proyecto p1 = new Proyecto("Proyecto Centro");
+        p1.agregarDepartamento(d1);
+        p1.agregarDepartamento(d2);
+
+        inmobiliaria.agregarProyecto(p1);
+    }
+}
