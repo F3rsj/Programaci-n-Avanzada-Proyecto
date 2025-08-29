@@ -1,0 +1,46 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class Proyecto {
+    private String nombre;
+    private final List<Departamento> departamentos;
+
+    public Proyecto(String nombre) {
+        this.nombre = nombre;
+        this.departamentos = new ArrayList<>();
+    }
+
+    public void agregarDepartamento(Departamento dpto) {
+        departamentos.add(dpto);
+    }
+
+    public void agregarClienteADepartamento(Cliente cliente, int indexDepartamento) {
+        if (indexDepartamento >= 0 && indexDepartamento < departamentos.size()) {
+            departamentos.get(indexDepartamento).agregarCliente(cliente);
+        }
+    }
+
+    public void agregarClienteADepartamento(String rut, String nombre, double presupuesto, int indexDepartamento) {
+        Cliente nuevo = new Cliente(rut, nombre, presupuesto);
+        agregarClienteADepartamento(nuevo, indexDepartamento);
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public List<Departamento> getDepartamentos() {
+        return departamentos;
+    }
+    public void mostrarInfo() {
+        System.out.println("Proyecto: " + nombre);
+        System.out.println("Cantidad de departamentos: " + departamentos.size());
+        for (int i = 0; i < departamentos.size(); i++) {
+            System.out.println("  Departamento " + i + ":");
+            departamentos.get(i).mostrarInfo();
+        }
+    }
+}
