@@ -12,6 +12,7 @@ public class Cliente {
     public String getRut() { 
         return rut; 
     }
+
     public void setRut(String rut) { 
         this.rut = rut; 
     }
@@ -19,6 +20,7 @@ public class Cliente {
     public String getNombre() { 
         return nombre; 
     }
+
     public void setNombre(String nombre) { 
         this.nombre = nombre; 
     }
@@ -26,6 +28,7 @@ public class Cliente {
     public double getPresupuesto() { 
         return presupuesto; 
     }
+
     public void setPresupuesto(double presupuesto) { 
         this.presupuesto = presupuesto; 
     }
