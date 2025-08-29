@@ -2,36 +2,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Departamento {
-    private double precioBase;
+    private double precio;
     private final List<Cliente> clientesInteresados;
 
-    public Departamento(double precioBase) {
-        this.precioBase = precioBase;
+    public Departamento(double precio) {
+        this.precio = precio;
         this.clientesInteresados = new ArrayList<>();
     }
 
-    public void agregarCliente(Cliente cliente) {
-        if (cliente.getPresupuesto() >= precioBase) {
-            clientesInteresados.add(cliente);
-        } else {
-            System.out.println("El cliente " + cliente.getNombre() + " no tiene presupuesto suficiente.");
-        }
-    }
-
-    public double getPrecioBase() {
-        return precioBase;
-    }
-    public void setPrecioBase(double precioBase) {
-        this.precioBase = precioBase;
-    }
+    public double getPrecio() { return precio; }
+    public void setPrecio(double precio) { this.precio = precio; }
 
     public List<Cliente> getClientesInteresados() {
         return clientesInteresados;
     }
-    public double calcularPrecioFinal() {
-        int demanda = clientesInteresados.size();
-        double incremento = 0.05; // 5% por cliente interesado
-        return precioBase * (1 + (demanda * incremento));
+
+    public void agregarCliente(Cliente c) {
+        clientesInteresados.add(c);
     }
 
     public void mostrarInfo() {
