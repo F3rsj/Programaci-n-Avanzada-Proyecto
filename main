@@ -6,6 +6,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         Inmobiliaria inmobiliaria = new Inmobiliaria("InmoChile");
+
         CargaDatos.cargarDatosIniciales(inmobiliaria);
 
         int opcion;
@@ -35,7 +36,8 @@ public class Main {
 
                         proyecto.agregarClienteADepartamento(rut, nombre, presupuesto, idxDep);
                         System.out.println(" Cliente agregado correctamente.");
-                    } else {
+                    } 
+                    else {
                         System.out.println(" Proyecto no encontrado.");
                     }
                     break;
@@ -45,19 +47,15 @@ public class Main {
                     String nomProyecto2 = br.readLine();
                     Proyecto proyecto2 = inmobiliaria.buscarProyectoPorNombre(nomProyecto2);
                     if (proyecto2 != null) {
-                        for (int i = 0; i < proyecto2.getDepartamentos().size(); i++) {
-                            System.out.println("Departamento " + i + ":");
-                            proyecto2.getDepartamentos().get(i).mostrarInfo();
-                        }
-                    } else {
+                        proyecto2.mostrarInfo();
+                    } 
+                    else {
                         System.out.println(" Proyecto no encontrado.");
                     }
                     break;
 
                 case 3:
-                    for (int i = 0; i < inmobiliaria.getProyectos().size(); i++) {
-                        inmobiliaria.getProyectos().get(i).mostrarInfo();
-                    }
+                    inmobiliaria.listarProyectos();
                     break;
 
                 case 0:
