@@ -46,11 +46,8 @@ public class Main {
                     Proyecto proyecto2 = inmobiliaria.buscarProyectoPorNombre(nomProyecto2);
                     if (proyecto2 != null) {
                         for (int i = 0; i < proyecto2.getDepartamentos().size(); i++) {
-                            Departamento dep = proyecto2.getDepartamentos().get(i);
-                            System.out.println("Departamento " + i + " → " + dep);
-                            for (Cliente cli : dep.getClientesInteresados()) {
-                                System.out.println("   - " + cli);
-                            }
+                            System.out.println("Departamento " + i + ":");
+                            proyecto2.getDepartamentos().get(i).mostrarInfo();
                         }
                     } else {
                         System.out.println(" Proyecto no encontrado.");
@@ -58,7 +55,9 @@ public class Main {
                     break;
 
                 case 3:
-                    inmobiliaria.listarProyectos();
+                    for (int i = 0; i < inmobiliaria.getProyectos().size(); i++) {
+                        inmobiliaria.getProyectos().get(i).mostrarInfo();
+                    }
                     break;
 
                 case 0:
