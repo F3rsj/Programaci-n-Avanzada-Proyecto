@@ -1,1 +1,2 @@
-# INF2236 Programacion Avanzada - Gestion de Inmobiliaria
+# INF2236 Programacion Avanzada 
+# Gestion de Inmobiliaria
