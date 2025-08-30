@@ -10,11 +10,11 @@ public class Departamento {
         this.clientesInteresados = new ArrayList<>();
     }
 
-    public double getPrecio() { 
-        return precio; 
+    public double getPrecio() {
+        return precio;
     }
-    public void setPrecio(double precio) { 
-        this.precio = precio; 
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
 
     public List<Cliente> getClientesInteresados() {
@@ -23,6 +23,11 @@ public class Departamento {
 
     public void agregarCliente(Cliente c) {
         clientesInteresados.add(c);
+    }
+
+    public void agregarCliente(String rut, String nombre, double presupuesto) {
+        Cliente nuevo = new Cliente(rut, nombre, presupuesto);
+        clientesInteresados.add(nuevo);
     }
 
     public void mostrarInfo() {
