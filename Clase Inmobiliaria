@@ -40,3 +40,27 @@ public class Inmobiliaria {
         }
     }
 }
+/* 
+IDEA PARA FUTUROS PUNTOS REVISENLO CUANDO PUEDAN :)
+
+    public boolean eliminarProyecto(String nombreProyecto) {
+        Proyecto p = proyectosPorNombre.remove(nombreProyecto);
+        if (p != null) {
+            proyectos.remove(p);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean modificarProyecto(String nombreAntiguo, String nombreNuevo) {
+        Proyecto p = proyectosPorNombre.get(nombreAntiguo);
+        if (p != null) {
+            proyectosPorNombre.remove(nombreAntiguo);
+            p.setNombre(nombreNuevo);
+            proyectosPorNombre.put(nombreNuevo, p);
+            return true;
+        }
+        return false;
+    }
+}
+*/
