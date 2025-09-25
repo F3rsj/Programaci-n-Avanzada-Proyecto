@@ -1,1 +1,37 @@
+package clases;
 
+public class Departamento {
+    private int numeroDepartamento;
+    private boolean vendido; 
+    private Cliente clienteComprador;
+
+    public Departamento(int numeroDepartamento, boolean vendido, Cliente clienteComprador) {
+        this.numeroDepartamento = numeroDepartamento;
+        this.vendido = false;
+        this.clienteComprador = null;
+    }
+
+    public int getNumeroDepartamento() {
+        return numeroDepartamento;
+    }
+
+    public void setNumeroDepartamento(int numeroDepartamento) {
+        this.numeroDepartamento = numeroDepartamento;
+    }
+
+    public boolean isVendido() {
+        return vendido;
+    }
+
+    public void setVendido(boolean vendido) {
+        this.vendido = vendido;
+    }
+
+    public Cliente getClienteComprador() {
+        return clienteComprador;
+    }
+
+    public void setClienteComprador(Cliente clienteComprador) {
+        this.clienteComprador = clienteComprador;
+    }
+}
