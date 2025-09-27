@@ -1,4 +1,4 @@
-//FUNCIONA PERO HAY TRABAJO POR HACER EN LA CARGA DE DATOS
+//FUNCIONA, Falta revisar y subir lo demas :)
 package vista;
 
 import modelo.*;
