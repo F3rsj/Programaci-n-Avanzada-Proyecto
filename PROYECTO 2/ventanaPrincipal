@@ -1,4 +1,4 @@
-// NO FUNCIONA ASI QUE HAY TRABAJO POR HACER EN ESTO
+//FUNCIONA PERO HAY TRABAJO POR HACER EN LA CARGA DE DATOS
 package vista;
 
 import modelo.*;
@@ -11,13 +11,25 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 
-public class VentanaPrincipal extends JFrame {
+public class VentanaPrincipal extends JFrame implements ActionListener {
     private Inmobiliaria inmobiliaria;
+    
+    // Botones principales
+    private JButton btnVerDepartamentos;
+    private JButton btnConsultarDepto;
+    private JButton btnComprarDepto;
+    private JButton btnBuscar;
+    private JButton btnFiltrar;
+    private JButton btnProyectos;
+    private JButton btnReportes;
+    private JButton btnSalir;
     
     public VentanaPrincipal() {
         inmobiliaria = new Inmobiliaria("Mi Inmobiliaria");
         cargarDatosIniciales();
-        inicializarComponentes();
+        crearInterfaz();
+        
+        // Cargar datos existentes
         GestorArchivos.cargarDatos(inmobiliaria);
     }
     
@@ -42,121 +54,157 @@ public class VentanaPrincipal extends JFrame {
         inmobiliaria.agregarCliente("22222222-2", c2);
     }
     
-    private void inicializarComponentes() {
-        setTitle("Sistema Inmobiliario - Mi Inmobiliaria");
+    private void crearInterfaz() {
+        // Configuracion basica de la ventana
+        setTitle("Sistema Inmobiliario");
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(700, 600);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
         
-        JPanel panelPrincipal = new JPanel();
-        panelPrincipal.setLayout(new BorderLayout());
-        panelPrincipal.setBackground(Color.WHITE);
+        // Panel superior con titulo
+        JPanel panelTitulo = new JPanel();
+        panelTitulo.setBackground(new Color(70, 130, 180));
+        JLabel titulo = new JLabel("SISTEMA INMOBILIARIO");
+        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        titulo.setForeground(Color.WHITE);
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
+        panelTitulo.add(titulo);
+        add(panelTitulo, BorderLayout.NORTH);
         
-        // Titulo
-        JLabel titulo = new JLabel("SISTEMA INMOBILIARIO", JLabel.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 28));
-        titulo.setForeground(new Color(50, 50, 150));
-        titulo.setBorder(BorderFactory.createEmptyBorder(30, 10, 30, 10));
-        panelPrincipal.add(titulo, BorderLayout.NORTH);
+        // Panel central con botones
+        JPanel panelCentral = new JPanel();
+        panelCentral.setLayout(new GridLayout(4, 2, 10, 10));
+        panelCentral.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
+        panelCentral.setBackground(Color.WHITE);
         
-        // Panel de botones
-        JPanel panelBotones = new JPanel();
-        panelBotones.setLayout(new GridLayout(4, 2, 20, 20));
-        panelBotones.setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
-        panelBotones.setBackground(Color.WHITE);
+        // Crear botones
+        btnVerDepartamentos = new JButton("Ver Departamentos");
+        btnConsultarDepto = new JButton("Consultar Departamento");
+        btnComprarDepto = new JButton("Comprar Departamento");
+        btnBuscar = new JButton("Buscar Departamento");
+        btnFiltrar = new JButton("Filtrar por Precio");
+        btnProyectos = new JButton("Gestionar Proyectos");
+        btnReportes = new JButton("Ver Reportes");
+        btnSalir = new JButton("Salir");
         
-        JButton btnVerDepartamentos = crearBoton("Ver Departamentos", new Color(70, 130, 180));
-        JButton btnGestionProyectos = crearBoton("Gestionar Proyectos", new Color(60, 179, 113));
-        JButton btnConsultarDepto = crearBoton("Consultar Departamento", new Color(255, 140, 0));
-        JButton btnComprarDepto = crearBoton("Comprar Departamento", new Color(220, 20, 60));
-        JButton btnBuscar = crearBoton("Buscar Departamento", new Color(147, 112, 219));
-        JButton btnFiltrar = crearBoton("Filtrar por Precio", new Color(32, 178, 170));
-        JButton btnReportes = crearBoton("Ver Reportes", new Color(255, 99, 71));
-        JButton btnSalir = crearBoton("Salir", new Color(105, 105, 105));
+        // Configurar botones
+        configurarBoton(btnVerDepartamentos, new Color(70, 130, 180));
+        configurarBoton(btnConsultarDepto, new Color(255, 140, 0));
+        configurarBoton(btnComprarDepto, new Color(220, 20, 60));
+        configurarBoton(btnBuscar, new Color(147, 112, 219));
+        configurarBoton(btnFiltrar, new Color(32, 178, 170));
+        configurarBoton(btnProyectos, new Color(60, 179, 113));
+        configurarBoton(btnReportes, new Color(255, 99, 71));
+        configurarBoton(btnSalir, new Color(105, 105, 105));
         
-        panelBotones.add(btnVerDepartamentos);
-        panelBotones.add(btnGestionProyectos);
-        panelBotones.add(btnConsultarDepto);
-        panelBotones.add(btnComprarDepto);
-        panelBotones.add(btnBuscar);
-        panelBotones.add(btnFiltrar);
-        panelBotones.add(btnReportes);
-        panelBotones.add(btnSalir);
+        // Agregar eventos
+        btnVerDepartamentos.addActionListener(this);
+        btnConsultarDepto.addActionListener(this);
+        btnComprarDepto.addActionListener(this);
+        btnBuscar.addActionListener(this);
+        btnFiltrar.addActionListener(this);
+        btnProyectos.addActionListener(this);
+        btnReportes.addActionListener(this);
+        btnSalir.addActionListener(this);
         
-        panelPrincipal.add(panelBotones, BorderLayout.CENTER);
+        // Agregar botones al panel
+        panelCentral.add(btnVerDepartamentos);
+        panelCentral.add(btnConsultarDepto);
+        panelCentral.add(btnComprarDepto);
+        panelCentral.add(btnBuscar);
+        panelCentral.add(btnFiltrar);
+        panelCentral.add(btnProyectos);
+        panelCentral.add(btnReportes);
+        panelCentral.add(btnSalir);
         
-        JLabel estado = new JLabel("Sistema listo para usar", JLabel.CENTER);
-        estado.setFont(new Font("Arial", Font.ITALIC, 12));
-        estado.setForeground(Color.GRAY);
-        estado.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
-        panelPrincipal.add(estado, BorderLayout.SOUTH);
+        add(panelCentral, BorderLayout.CENTER);
         
-        add(panelPrincipal);
-        
-        // Eventos de botones
-        btnVerDepartamentos.addActionListener(e -> mostrarDepartamentos());
-        btnGestionProyectos.addActionListener(e -> gestionarProyectos());
-        btnConsultarDepto.addActionListener(e -> consultarDepartamento());
-        btnComprarDepto.addActionListener(e -> comprarDepartamento());
-        btnBuscar.addActionListener(e -> buscarDepartamento());
-        btnFiltrar.addActionListener(e -> filtrarDepartamentos());
-        btnReportes.addActionListener(e -> mostrarReportes());
-        btnSalir.addActionListener(e -> salir());
+        // Panel inferior con informacion
+        JPanel panelInferior = new JPanel();
+        panelInferior.setBackground(new Color(240, 240, 240));
+        JLabel info = new JLabel("Sistema listo para usar");
+        info.setFont(new Font("Arial", Font.ITALIC, 12));
+        panelInferior.add(info);
+        add(panelInferior, BorderLayout.SOUTH);
     }
     
-    private JButton crearBoton(String texto, Color color) {
-        JButton boton = new JButton(texto);
-        boton.setFont(new Font("Arial", Font.BOLD, 16));
+    private void configurarBoton(JButton boton, Color color) {
+        boton.setFont(new Font("Arial", Font.BOLD, 14));
         boton.setBackground(color);
         boton.setForeground(Color.WHITE);
-        boton.setBorder(BorderFactory.createRaisedBevelBorder());
-        boton.setPreferredSize(new Dimension(250, 60));
+        boton.setPreferredSize(new Dimension(200, 50));
         boton.setFocusPainted(false);
-        
-        // Efecto al pasar el mouse
-        boton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                boton.setBackground(color.brighter());
-                boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                boton.setBackground(color);
-                boton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            }
-        });
-        
-        return boton;
+        boton.setBorder(BorderFactory.createRaisedBevelBorder());
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnVerDepartamentos) {
+            mostrarDepartamentos();
+        } else if (e.getSource() == btnConsultarDepto) {
+            consultarDepartamento();
+        } else if (e.getSource() == btnComprarDepto) {
+            comprarDepartamento();
+        } else if (e.getSource() == btnBuscar) {
+            buscarDepartamento();
+        } else if (e.getSource() == btnFiltrar) {
+            filtrarDepartamentos();
+        } else if (e.getSource() == btnProyectos) {
+            gestionarProyectos();
+        } else if (e.getSource() == btnReportes) {
+            mostrarReportes();
+        } else if (e.getSource() == btnSalir) {
+            salir();
+        }
     }
     
     private void mostrarDepartamentos() {
-        StringBuilder info = new StringBuilder();
-        info.append("LISTA COMPLETA DE DEPARTAMENTOS\n\n");
+        StringBuilder texto = new StringBuilder();
+        texto.append("LISTA DE DEPARTAMENTOS\n\n");
         
-        Map<String, Proyecto> proyectos = inmobiliaria.getProyectos();
-        for (Proyecto proyecto : proyectos.values()) {
-            info.append("PROYECTO: ").append(proyecto.getNombre()).append("\n");
-            info.append("Ubicacion: ").append(proyecto.getUbicacion()).append("\n\n");
-            
-            List<Departamento> departamentos = proyecto.getDepartamentos();
-            for (Departamento depto : departamentos) {
-                String estado = depto.isVendido() ? "VENDIDO" : "DISPONIBLE";
-                info.append("  Depto ").append(depto.getNumero())
-                    .append(" - $").append(String.format("%.0f", depto.getPrecioBase()))
-                    .append(" - ").append(estado)
-                    .append(" - Consultas: ").append(depto.getContadorConsultas())
-                    .append("\n");
+        // Verificar si hay proyectos
+        if (inmobiliaria.getProyectos().isEmpty()) {
+            texto.append("No hay proyectos registrados en el sistema.\n");
+        } else {
+            // Mostrar cada proyecto
+            for (Proyecto proyecto : inmobiliaria.getProyectos().values()) {
+                texto.append("PROYECTO: ").append(proyecto.getNombre()).append("\n");
+                texto.append("Ubicacion: ").append(proyecto.getUbicacion()).append("\n");
+                texto.append("Codigo: ").append(proyecto.getCodigo()).append("\n\n");
+                
+                // Verificar si el proyecto tiene departamentos
+                if (proyecto.getDepartamentos().isEmpty()) {
+                    texto.append("  Este proyecto no tiene departamentos registrados.\n\n");
+                } else {
+                    // Mostrar cada departamento
+                    for (Departamento depto : proyecto.getDepartamentos()) {
+                        String estado = depto.isVendido() ? "VENDIDO" : "DISPONIBLE";
+                        texto.append("  Depto ").append(depto.getNumero())
+                             .append(" - $").append(String.format("%.0f", depto.getPrecioBase()))
+                             .append(" - ").append(estado)
+                             .append(" - Consultas: ").append(depto.getContadorConsultas())
+                             .append("\n");
+                    }
+                    texto.append("\n");
+                }
             }
-            info.append("\n");
         }
         
-        mostrarVentanaTexto("Departamentos Disponibles", info.toString());
+        // Agregar informacion de resumen
+        texto.append("RESUMEN:\n");
+        texto.append("Total proyectos: ").append(inmobiliaria.getProyectos().size()).append("\n");
+        
+        int totalDeptos = 0;
+        for (Proyecto p : inmobiliaria.getProyectos().values()) {
+            totalDeptos += p.getDepartamentos().size();
+        }
+        texto.append("Total departamentos: ").append(totalDeptos).append("\n");
+        
+        mostrarTexto("Departamentos", texto.toString());
     }
     
     private void consultarDepartamento() {
-        String numeroStr = JOptionPane.showInputDialog(this, 
-            "Ingrese el numero del departamento a consultar:", 
-            "Consultar Departamento", 
-            JOptionPane.QUESTION_MESSAGE);
+        String numeroStr = JOptionPane.showInputDialog(this, "Ingrese numero del departamento:");
         
         if (numeroStr == null || numeroStr.trim().isEmpty()) return;
         
@@ -165,49 +213,36 @@ public class VentanaPrincipal extends JFrame {
             Departamento depto = inmobiliaria.buscarDepartamentoPorNumero(numero);
             
             if (depto == null) {
-                JOptionPane.showMessageDialog(this, 
-                    "Departamento no encontrado", 
-                    "Error", 
-                    JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Departamento no encontrado");
                 return;
             }
             
             if (depto.isVendido()) {
-                JOptionPane.showMessageDialog(this, 
-                    "El departamento ya esta vendido", 
-                    "No disponible", 
-                    JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El departamento ya esta vendido");
                 return;
             }
             
-            // Aumentar contador de consultas
+            // Registrar consulta
             depto.registrarConsulta();
             
             String info = "INFORMACION DEL DEPARTAMENTO\n\n" +
                          "Numero: " + depto.getNumero() + "\n" +
-                         "Precio base: $" + String.format("%.2f", depto.getPrecioBase()) + "\n" +
+                         "Precio base: $" + depto.getPrecioBase() + "\n" +
                          "Precio actual: $" + String.format("%.2f", depto.getPrecioActual()) + "\n" +
                          "Factor demanda: " + depto.getFactorDemanda() + "x\n" +
-                         "Total consultas: " + depto.getContadorConsultas() + "\n" +
+                         "Consultas totales: " + depto.getContadorConsultas() + "\n" +
                          "Estado: DISPONIBLE\n\n" +
-                         "Consulta registrada exitosamente";
+                         "Consulta registrada exitosamente!";
             
-            JOptionPane.showMessageDialog(this, info, "Informacion del Departamento", 
-                                        JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, info);
             
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Por favor ingrese un numero valido", 
-                "Error de formato", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ingrese un numero valido");
         }
     }
     
     private void comprarDepartamento() {
-        String numeroStr = JOptionPane.showInputDialog(this, 
-            "Ingrese el numero del departamento a comprar:", 
-            "Comprar Departamento", 
-            JOptionPane.QUESTION_MESSAGE);
+        String numeroStr = JOptionPane.showInputDialog(this, "Ingrese numero del departamento a comprar:");
         
         if (numeroStr == null || numeroStr.trim().isEmpty()) return;
         
@@ -216,83 +251,73 @@ public class VentanaPrincipal extends JFrame {
             Departamento depto = inmobiliaria.buscarDepartamentoPorNumero(numero);
             
             if (depto == null) {
-                JOptionPane.showMessageDialog(this, 
-                    "Departamento no encontrado", 
-                    "Error", 
-                    JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Departamento no encontrado");
                 return;
             }
             
             if (depto.isVendido()) {
-                JOptionPane.showMessageDialog(this, 
-                    "El departamento numero " + numero + " ya esta vendido", 
-                    "No disponible", 
-                    JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El departamento ya esta vendido");
                 return;
             }
             
-            // Mostrar información del departamento
-            String infoDepto = "DEPARTAMENTO SELECCIONADO\n\n" +
-                              "Numero: " + depto.getNumero() + "\n" +
-                              "Precio actual: $" + String.format("%.2f", depto.getPrecioActual());
-            
-            int opcion = JOptionPane.showConfirmDialog(this, 
-                infoDepto + "\n\nDesea continuar con la compra?", 
-                "Confirmar Seleccion", 
-                JOptionPane.YES_NO_OPTION, 
-                JOptionPane.QUESTION_MESSAGE);
-            
-            if (opcion != JOptionPane.YES_OPTION) return;
-            
-            // Pedir datos del cliente
-            VentanaCliente ventanaCliente = new VentanaCliente(this, inmobiliaria);
-            Cliente cliente = ventanaCliente.obtenerCliente();
-            
-            if (cliente == null) return;
-            
-            // Confirmar compra final
-            String confirmacion = "CONFIRMAR COMPRA\n\n" +
-                                 "Departamento: " + depto.getNumero() + "\n" +
-                                 "Precio: $" + String.format("%.2f", depto.getPrecioActual()) + "\n" +
-                                 "Cliente: " + cliente.getNombre() + "\n" +
-                                 "RUT: " + cliente.getRut() + "\n\n" +
-                                 "Confirmar la venta?";
+            // Mostrar informacion del departamento
+            String info = "DEPARTAMENTO SELECCIONADO\n\n" +
+                         "Numero: " + depto.getNumero() + "\n" +
+                         "Precio actual: $" + String.format("%.2f", depto.getPrecioActual());
             
             int confirmar = JOptionPane.showConfirmDialog(this, 
-                confirmacion, 
-                "Confirmar Venta", 
-                JOptionPane.YES_NO_OPTION, 
-                JOptionPane.QUESTION_MESSAGE);
+                info + "\n\nDesea continuar con la compra?", 
+                "Confirmar", 
+                JOptionPane.YES_NO_OPTION);
             
-            if (confirmar == JOptionPane.YES_OPTION) {
-                double precioVenta = depto.getPrecioActual();
-                Venta venta = new Venta(depto, cliente, precioVenta);
-                inmobiliaria.registrarVenta(venta);
+            if (confirmar != JOptionPane.YES_OPTION) return;
+            
+            // Datos del cliente
+            String rut = JOptionPane.showInputDialog(this, "RUT del cliente:");
+            if (rut == null || rut.trim().isEmpty()) return;
+            
+            Cliente cliente = inmobiliaria.buscarCliente(rut);
+            if (cliente == null) {
+                String nombre = JOptionPane.showInputDialog(this, "Nombre del cliente:");
+                String telefono = JOptionPane.showInputDialog(this, "Telefono del cliente:");
                 
-                String resultado = "VENTA REALIZADA EXITOSAMENTE\n\n" +
-                                 "Departamento " + depto.getNumero() + " vendido\n" +
+                if (nombre == null || telefono == null || nombre.trim().isEmpty() || telefono.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Datos incompletos");
+                    return;
+                }
+                
+                cliente = new Cliente(rut, nombre, telefono);
+                inmobiliaria.agregarCliente(rut, cliente);
+            }
+            
+            // Confirmar venta final
+            String confirmacion = "CONFIRMAR VENTA\n\n" +
+                                 "Departamento: " + depto.getNumero() + "\n" +
                                  "Cliente: " + cliente.getNombre() + "\n" +
-                                 "Precio final: $" + String.format("%.2f", precioVenta) + "\n" +
-                                 "Numero de venta: " + venta.getId();
+                                 "Precio: $" + String.format("%.2f", depto.getPrecioActual()) + "\n\n" +
+                                 "Confirmar venta?";
+            
+            int venta = JOptionPane.showConfirmDialog(this, confirmacion, "Confirmar Venta", JOptionPane.YES_NO_OPTION);
+            
+            if (venta == JOptionPane.YES_OPTION) {
+                double precioVenta = depto.getPrecioActual();
+                Venta ventaObj = new Venta(depto, cliente, precioVenta);
+                inmobiliaria.registrarVenta(ventaObj);
                 
-                JOptionPane.showMessageDialog(this, resultado, 
-                                            "Venta Exitosa", 
-                                            JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, 
+                    "VENTA REALIZADA\n\n" +
+                    "Departamento " + depto.getNumero() + " vendido a " + cliente.getNombre() + "\n" +
+                    "Precio final: $" + String.format("%.2f", precioVenta) + "\n" +
+                    "ID Venta: " + ventaObj.getId());
             }
             
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Por favor ingrese un numero valido", 
-                "Error de formato", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ingrese un numero valido");
         }
     }
     
     private void buscarDepartamento() {
-        String numeroStr = JOptionPane.showInputDialog(this, 
-            "Ingrese el numero del departamento a buscar:", 
-            "Buscar Departamento", 
-            JOptionPane.QUESTION_MESSAGE);
+        String numeroStr = JOptionPane.showInputDialog(this, "Ingrese numero del departamento a buscar:");
         
         if (numeroStr == null || numeroStr.trim().isEmpty()) return;
         
@@ -305,28 +330,17 @@ public class VentanaPrincipal extends JFrame {
                 String info = "DEPARTAMENTO ENCONTRADO\n\n" +
                              depto.toString() + "\n" +
                              "Estado: " + estado;
-                
-                JOptionPane.showMessageDialog(this, info, "Busqueda Exitosa", 
-                                            JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, info);
             } else {
-                JOptionPane.showMessageDialog(this, 
-                    "Departamento no encontrado", 
-                    "Sin resultados", 
-                    JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Departamento no encontrado");
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Por favor ingrese un numero valido", 
-                "Error de formato", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ingrese un numero valido");
         }
     }
     
     private void filtrarDepartamentos() {
-        String precioStr = JOptionPane.showInputDialog(this, 
-            "Ingrese el precio maximo para filtrar:", 
-            "Filtrar por Precio", 
-            JOptionPane.QUESTION_MESSAGE);
+        String precioStr = JOptionPane.showInputDialog(this, "Ingrese precio maximo:");
         
         if (precioStr == null || precioStr.trim().isEmpty()) return;
         
@@ -334,546 +348,220 @@ public class VentanaPrincipal extends JFrame {
             double precioMax = Double.parseDouble(precioStr);
             StringBuilder resultado = new StringBuilder();
             resultado.append("DEPARTAMENTOS DISPONIBLES\n");
-            resultado.append("Precio maximo: $").append(String.format("%.2f", precioMax)).append("\n\n");
+            resultado.append("Precio maximo: $").append(precioMax).append("\n\n");
             
             int contador = 0;
-            Map<String, Proyecto> proyectos = inmobiliaria.getProyectos();
-            
-            for (Proyecto proyecto : proyectos.values()) {
-                List<Departamento> departamentos = proyecto.getDepartamentos();
-                for (Departamento depto : departamentos) {
+            for (Proyecto proyecto : inmobiliaria.getProyectos().values()) {
+                for (Departamento depto : proyecto.getDepartamentos()) {
                     if (!depto.isVendido() && depto.getPrecioBase() <= precioMax) {
                         resultado.append(proyecto.getNombre())
                                 .append(" - Depto ").append(depto.getNumero())
-                                .append(" - $").append(String.format("%.2f", depto.getPrecioBase()))
-                                .append("\n");
+                                .append(" - $").append(depto.getPrecioBase()).append("\n");
                         contador++;
                     }
                 }
             }
             
             if (contador == 0) {
-                resultado.append("No se encontraron departamentos disponibles en ese rango de precio.");
+                resultado.append("No se encontraron departamentos en ese rango de precio");
             } else {
                 resultado.append("\nTotal encontrados: ").append(contador);
             }
             
-            mostrarVentanaTexto("Resultados del Filtro", resultado.toString());
+            mostrarTexto("Filtro por Precio", resultado.toString());
             
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Por favor ingrese un precio valido", 
-                "Error de formato", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ingrese un precio valido");
         }
     }
     
     private void gestionarProyectos() {
-        new VentanaProyectos(this, inmobiliaria).setVisible(true);
+        String[] opciones = {"Agregar Proyecto", "Agregar Departamento", "Ver Proyectos", "Guardar Datos", "Cancelar"};
+        int opcion = JOptionPane.showOptionDialog(this,
+            "Que desea hacer?",
+            "Gestion de Proyectos",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            opciones,
+            opciones[0]);
+        
+        switch (opcion) {
+            case 0: // Agregar Proyecto
+                agregarProyecto();
+                break;
+            case 1: // Agregar Departamento
+                agregarDepartamento();
+                break;
+            case 2: // Ver Proyectos
+                verProyectos();
+                break;
+            case 3: // Guardar Datos
+                guardarDatos();
+                break;
+        }
+    }
+    
+    private void guardarDatos() {
+        try {
+            GestorArchivos.guardarDatos(inmobiliaria);
+            JOptionPane.showMessageDialog(this, "Datos guardados exitosamente");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al guardar los datos: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void agregarProyecto() {
+        String codigo = JOptionPane.showInputDialog(this, "Codigo del proyecto:");
+        if (codigo == null || codigo.trim().isEmpty()) return;
+        
+        String nombre = JOptionPane.showInputDialog(this, "Nombre del proyecto:");
+        if (nombre == null || nombre.trim().isEmpty()) return;
+        
+        String ubicacion = JOptionPane.showInputDialog(this, "Ubicacion del proyecto:");
+        if (ubicacion == null || ubicacion.trim().isEmpty()) return;
+        
+        if (inmobiliaria.getProyectos().containsKey(codigo)) {
+            JOptionPane.showMessageDialog(this, "Ya existe un proyecto con ese codigo");
+            return;
+        }
+        
+        Proyecto proyecto = new Proyecto(codigo, nombre, ubicacion);
+        inmobiliaria.agregarProyecto(codigo, proyecto);
+        JOptionPane.showMessageDialog(this, "Proyecto agregado exitosamente");
+    }
+    
+    private void agregarDepartamento() {
+        if (inmobiliaria.getProyectos().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Primero debe crear un proyecto");
+            return;
+        }
+        
+        // Mostrar proyectos disponibles
+        StringBuilder proyectosDisponibles = new StringBuilder("Proyectos disponibles:\n");
+        for (Proyecto p : inmobiliaria.getProyectos().values()) {
+            proyectosDisponibles.append(p.getCodigo()).append(" - ").append(p.getNombre()).append("\n");
+        }
+        
+        String codigo = JOptionPane.showInputDialog(this, proyectosDisponibles.toString() + "\nIngrese codigo del proyecto:");
+        if (codigo == null || codigo.trim().isEmpty()) return;
+        
+        Proyecto proyecto = inmobiliaria.getProyectos().get(codigo);
+        if (proyecto == null) {
+            JOptionPane.showMessageDialog(this, "Proyecto no encontrado");
+            return;
+        }
+        
+        try {
+            String numeroStr = JOptionPane.showInputDialog(this, "Numero del departamento:");
+            int numero = Integer.parseInt(numeroStr);
+            
+            String precioStr = JOptionPane.showInputDialog(this, "Precio del departamento:");
+            double precio = Double.parseDouble(precioStr);
+            
+            if (proyecto.buscarDepartamento(numero) != null) {
+                JOptionPane.showMessageDialog(this, "Ya existe un departamento con ese numero");
+                return;
+            }
+            
+            Departamento depto = new Departamento(numero, precio);
+            proyecto.agregarDepartamento(depto);
+            JOptionPane.showMessageDialog(this, "Departamento agregado exitosamente");
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Valores numericos no validos");
+        }
+    }
+    
+    private void verProyectos() {
+        StringBuilder texto = new StringBuilder();
+        texto.append("PROYECTOS REGISTRADOS\n\n");
+        
+        for (Proyecto proyecto : inmobiliaria.getProyectos().values()) {
+            texto.append("PROYECTO: ").append(proyecto.getNombre()).append("\n");
+            texto.append("Codigo: ").append(proyecto.getCodigo()).append("\n");
+            texto.append("Ubicacion: ").append(proyecto.getUbicacion()).append("\n");
+            texto.append("Total departamentos: ").append(proyecto.getTotalDepartamentos()).append("\n");
+            texto.append("Departamentos vendidos: ").append(proyecto.getDepartamentosVendidos()).append("\n\n");
+        }
+        
+        mostrarTexto("Proyectos", texto.toString());
     }
     
     private void mostrarReportes() {
         StringBuilder reporte = new StringBuilder();
-        reporte.append("REPORTE GENERAL DEL SISTEMA\n\n");
-        reporte.append("Total de proyectos: ").append(inmobiliaria.getProyectos().size()).append("\n");
-        reporte.append("Total de ventas realizadas: ").append(inmobiliaria.getVentas().size()).append("\n\n");
-        
-        reporte.append("DETALLE POR PROYECTO:\n\n");
+        reporte.append("REPORTE GENERAL\n\n");
+        reporte.append("Total proyectos: ").append(inmobiliaria.getProyectos().size()).append("\n");
+        reporte.append("Total ventas: ").append(inmobiliaria.getVentas().size()).append("\n\n");
         
         for (Proyecto proyecto : inmobiliaria.getProyectos().values()) {
             reporte.append("PROYECTO: ").append(proyecto.getNombre()).append("\n");
             reporte.append("Ubicacion: ").append(proyecto.getUbicacion()).append("\n");
-            reporte.append("Total departamentos: ").append(proyecto.getTotalDepartamentos()).append("\n");
-            reporte.append("Departamentos vendidos: ").append(proyecto.getDepartamentosVendidos()).append("\n");
-            reporte.append("Porcentaje de venta: ").append(String.format("%.1f", proyecto.getPorcentajeVendido())).append("%\n");
-            reporte.append("Promedio de consultas: ").append(String.format("%.1f", proyecto.getDemandaPromedio())).append("\n\n");
+            reporte.append("Departamentos: ").append(proyecto.getTotalDepartamentos()).append("\n");
+            reporte.append("Vendidos: ").append(proyecto.getDepartamentosVendidos()).append("\n");
+            reporte.append("Porcentaje vendido: ").append(String.format("%.1f", proyecto.getPorcentajeVendido())).append("%\n");
+            reporte.append("Demanda promedio: ").append(String.format("%.1f", proyecto.getDemandaPromedio())).append("\n\n");
         }
         
-        mostrarVentanaTexto("Reporte General", reporte.toString());
+        mostrarTexto("Reporte General", reporte.toString());
     }
     
-    private void mostrarVentanaTexto(String titulo, String texto) {
+    private void mostrarTexto(String titulo, String texto) {
         JDialog ventana = new JDialog(this, titulo, true);
-        ventana.setSize(650, 550);
+        ventana.setSize(600, 500);
         ventana.setLocationRelativeTo(this);
         
-        JTextArea textArea = new JTextArea(texto);
-        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        textArea.setEditable(false);
-        textArea.setBackground(Color.WHITE);
-        textArea.setMargin(new Insets(10, 10, 10, 10));
+        JTextArea area = new JTextArea(texto);
+        area.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        area.setEditable(false);
         
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        JScrollPane scroll = new JScrollPane(area);
+        scroll.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         JButton btnCerrar = new JButton("Cerrar");
-        btnCerrar.setPreferredSize(new Dimension(100, 30));
         btnCerrar.addActionListener(e -> ventana.dispose());
         
         JPanel panelBoton = new JPanel();
-        panelBoton.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         panelBoton.add(btnCerrar);
         
-        ventana.add(scrollPane, BorderLayout.CENTER);
+        ventana.add(scroll, BorderLayout.CENTER);
         ventana.add(panelBoton, BorderLayout.SOUTH);
-        
         ventana.setVisible(true);
     }
     
     private void salir() {
-        int opcion = JOptionPane.showConfirmDialog(this, 
-            "Esta seguro que desea salir del sistema?", 
+        int respuesta = JOptionPane.showConfirmDialog(this, 
+            "Esta seguro que desea salir?\nSe guardaran todos los datos automaticamente.", 
             "Confirmar Salida", 
-            JOptionPane.YES_NO_OPTION, 
-            JOptionPane.QUESTION_MESSAGE);
+            JOptionPane.YES_NO_OPTION);
         
-        if (opcion == JOptionPane.YES_OPTION) {
-            GestorArchivos.guardarDatos(inmobiliaria);
-            System.exit(0);
+        if (respuesta == JOptionPane.YES_OPTION) {
+            try {
+                GestorArchivos.guardarDatos(inmobiliaria);
+                System.out.println("Datos guardados exitosamente");
+                System.exit(0);
+            } catch (Exception e) {
+                System.out.println("Error al guardar: " + e.getMessage());
+                int continuar = JOptionPane.showConfirmDialog(this,
+                    "Error al guardar los datos. Desea salir sin guardar?",
+                    "Error de Guardado",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+                if (continuar == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
+            }
         }
     }
     
     public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        JFrame frame = new JFrame("Mi Ventana");
-        SwingUtilities.updateComponentTreeUI(frame); 
-        frame.setVisible(true);
+        VentanaPrincipal ventana = new VentanaPrincipal();
+        ventana.setVisible(true);
     }
 }
-
-// Ventana auxiliar para manejo de clientes
-class VentanaCliente extends JDialog {
-    private JTextField txtRut, txtNombre, txtTelefono;
-    private Cliente clienteSeleccionado;
-    private Inmobiliaria inmobiliaria;
-    
-    public VentanaCliente(JFrame padre, Inmobiliaria inmobiliaria) {
-        super(padre, "Datos del Cliente", true);
-        this.inmobiliaria = inmobiliaria;
-        inicializarComponentes();
-    }
-    
-    private void inicializarComponentes() {
-        setSize(450, 350);
-        setLocationRelativeTo(getParent());
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        
-        JPanel panel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        panel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
-        panel.setBackground(Color.WHITE);
-        
-        // Titulo
-        JLabel titulo = new JLabel("DATOS DEL CLIENTE", JLabel.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 18));
-        titulo.setForeground(new Color(50, 50, 150));
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
-        gbc.insets = new Insets(0, 0, 25, 0);
-        panel.add(titulo, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.insets = new Insets(8, 8, 8, 8);
-        gbc.anchor = GridBagConstraints.WEST;
-        
-        // Campo RUT
-        gbc.gridx = 0; gbc.gridy = 1;
-        JLabel lblRut = new JLabel("RUT:");
-        lblRut.setFont(new Font("Arial", Font.BOLD, 14));
-        panel.add(lblRut, gbc);
-        gbc.gridx = 1;
-        txtRut = new JTextField(15);
-        txtRut.setFont(new Font("Arial", Font.PLAIN, 14));
-        panel.add(txtRut, gbc);
-        
-        // Boton buscar
-        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        JButton btnBuscar = new JButton("Buscar Cliente Existente");
-        btnBuscar.setFont(new Font("Arial", Font.BOLD, 12));
-        btnBuscar.setBackground(new Color(70, 130, 180));
-        btnBuscar.setForeground(Color.WHITE);
-        btnBuscar.addActionListener(e -> buscarCliente());
-        panel.add(btnBuscar, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.NONE;
-        
-        // Campo Nombre
-        gbc.gridx = 0; gbc.gridy = 3;
-        JLabel lblNombre = new JLabel("Nombre:");
-        lblNombre.setFont(new Font("Arial", Font.BOLD, 14));
-        panel.add(lblNombre, gbc);
-        gbc.gridx = 1;
-        txtNombre = new JTextField(15);
-        txtNombre.setFont(new Font("Arial", Font.PLAIN, 14));
-        panel.add(txtNombre, gbc);
-        
-        // Campo Telefono
-        gbc.gridx = 0; gbc.gridy = 4;
-        JLabel lblTelefono = new JLabel("Telefono:");
-        lblTelefono.setFont(new Font("Arial", Font.BOLD, 14));
-        panel.add(lblTelefono, gbc);
-        gbc.gridx = 1;
-        txtTelefono = new JTextField(15);
-        txtTelefono.setFont(new Font("Arial", Font.PLAIN, 14));
-        panel.add(txtTelefono, gbc);
-        
-        // Botones finales
-        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(25, 8, 8, 8);
-        
-        JPanel panelBotones = new JPanel();
-        panelBotones.setBackground(Color.WHITE);
-        JButton btnAceptar = new JButton("Aceptar");
-        JButton btnCancelar = new JButton("Cancelar");
-        
-        btnAceptar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnCancelar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnAceptar.setBackground(new Color(60, 179, 113));
-        btnCancelar.setBackground(new Color(220, 20, 60));
-        btnAceptar.setForeground(Color.WHITE);
-        btnCancelar.setForeground(Color.WHITE);
-        
-        btnAceptar.addActionListener(e -> aceptar());
-        btnCancelar.addActionListener(e -> cancelar());
-        
-        panelBotones.add(btnAceptar);
-        panelBotones.add(btnCancelar);
-        panel.add(panelBotones, gbc);
-        
-        add(panel);
-    }
-    
-    private void buscarCliente() {
-        String rut = txtRut.getText().trim();
-        if (rut.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Debe ingresar un RUT primero");
-            return;
-        }
-        
-        Cliente cliente = inmobiliaria.buscarCliente(rut);
-        if (cliente != null) {
-            txtNombre.setText(cliente.getNombre());
-            txtTelefono.setText(cliente.getTelefono());
-            JOptionPane.showMessageDialog(this, "Cliente encontrado en la base de datos");
-        } else {
-            txtNombre.setText("");
-            txtTelefono.setText("");
-            JOptionPane.showMessageDialog(this, "Cliente no encontrado. Puede registrar uno nuevo completando los datos.");
-        }
-    }
-    
-    private void aceptar() {
-        String rut = txtRut.getText().trim();
-        String nombre = txtNombre.getText().trim();
-        String telefono = txtTelefono.getText().trim();
-        
-        if (rut.isEmpty() || nombre.isEmpty() || telefono.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
-            return;
-        }
-        
-        clienteSeleccionado = inmobiliaria.buscarCliente(rut);
-        if (clienteSeleccionado == null) {
-            clienteSeleccionado = new Cliente(rut, nombre, telefono);
-            inmobiliaria.agregarCliente(rut, clienteSeleccionado);
-        }
-        
-        dispose();
-    }
-    
-    private void cancelar() {
-        clienteSeleccionado = null;
-        dispose();
-    }
-    
-    public Cliente obtenerCliente() {
-        setVisible(true);
-        return clienteSeleccionado;
-    }
-}
-
-// Ventana auxiliar para gestion de proyectos
-class VentanaProyectos extends JDialog {
-    private Inmobiliaria inmobiliaria;
-    private JTextArea textArea;
-    
-    public VentanaProyectos(JFrame padre, Inmobiliaria inmobiliaria) {
-        super(padre, "Gestion de Proyectos", true);
-        this.inmobiliaria = inmobiliaria;
-        inicializarComponentes();
-        actualizarLista();
-    }
-    
-    private void inicializarComponentes() {
-        setSize(700, 600);
-        setLocationRelativeTo(getParent());
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.WHITE);
-        
-        // Titulo
-        JLabel titulo = new JLabel("GESTION DE PROYECTOS", JLabel.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 20));
-        titulo.setForeground(new Color(50, 50, 150));
-        titulo.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-        panel.add(titulo, BorderLayout.NORTH);
-        
-        // Area de texto para mostrar proyectos
-        textArea = new JTextArea();
-        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        textArea.setEditable(false);
-        textArea.setBackground(Color.WHITE);
-        textArea.setMargin(new Insets(10, 10, 10, 10));
-        
-        JScrollPane scroll = new JScrollPane(textArea);
-        scroll.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createEtchedBorder(), "Lista de Proyectos"));
-        panel.add(scroll, BorderLayout.CENTER);
-        
-        // Panel de botones
-        JPanel panelBotones = new JPanel();
-        panelBotones.setBackground(Color.WHITE);
-        panelBotones.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
-        
-        JButton btnAgregar = new JButton("Agregar Proyecto");
-        JButton btnAgregarDepto = new JButton("Agregar Departamento");
-        JButton btnActualizar = new JButton("Actualizar Lista");
-        JButton btnCerrar = new JButton("Cerrar");
-        
-        btnAgregar.setFont(new Font("Arial", Font.BOLD, 12));
-        btnAgregarDepto.setFont(new Font("Arial", Font.BOLD, 12));
-        btnActualizar.setFont(new Font("Arial", Font.BOLD, 12));
-        btnCerrar.setFont(new Font("Arial", Font.BOLD, 12));
-        
-        btnAgregar.setBackground(new Color(60, 179, 113));
-        btnAgregarDepto.setBackground(new Color(70, 130, 180));
-        btnActualizar.setBackground(new Color(255, 140, 0));
-        btnCerrar.setBackground(new Color(105, 105, 105));
-        
-        btnAgregar.setForeground(Color.WHITE);
-        btnAgregarDepto.setForeground(Color.WHITE);
-        btnActualizar.setForeground(Color.WHITE);
-        btnCerrar.setForeground(Color.WHITE);
-        
-        btnAgregar.addActionListener(e -> agregarProyecto());
-        btnAgregarDepto.addActionListener(e -> agregarDepartamento());
-        btnActualizar.addActionListener(e -> actualizarLista());
-        btnCerrar.addActionListener(e -> dispose());
-        
-        panelBotones.add(btnAgregar);
-        panelBotones.add(btnAgregarDepto);
-        panelBotones.add(btnActualizar);
-        panelBotones.add(btnCerrar);
-        
-        panel.add(panelBotones, BorderLayout.SOUTH);
-        add(panel);
-    }
-    
-    private void actualizarLista() {
-        StringBuilder sb = new StringBuilder();
-        Map<String, Proyecto> proyectos = inmobiliaria.getProyectos();
-        
-        sb.append("PROYECTOS REGISTRADOS EN EL SISTEMA:\n\n");
-        
-        if (proyectos.isEmpty()) {
-            sb.append("No hay proyectos registrados.");
-        } else {
-            for (Proyecto proyecto : proyectos.values()) {
-                sb.append("PROYECTO: ").append(proyecto.getNombre()).append("\n");
-                sb.append("Codigo: ").append(proyecto.getCodigo()).append("\n");
-                sb.append("Ubicacion: ").append(proyecto.getUbicacion()).append("\n");
-                sb.append("Total departamentos: ").append(proyecto.getTotalDepartamentos()).append("\n");
-                sb.append("Departamentos vendidos: ").append(proyecto.getDepartamentosVendidos()).append("\n");
-                
-                List<Departamento> departamentos = proyecto.getDepartamentos();
-                if (!departamentos.isEmpty()) {
-                    sb.append("Departamentos:\n");
-                    for (Departamento depto : departamentos) {
-                        String estado = depto.isVendido() ? "VENDIDO" : "DISPONIBLE";
-                        sb.append("  - Depto ").append(depto.getNumero())
-                          .append(" - $").append(String.format("%.0f", depto.getPrecioBase()))
-                          .append(" - ").append(estado).append("\n");
-                    }
-                }
-                sb.append("\n");
-            }
-        }
-        
-        textArea.setText(sb.toString());
-        textArea.setCaretPosition(0);
-    }
-    
-    private void agregarProyecto() {
-        JDialog dialogo = new JDialog(this, "Agregar Nuevo Proyecto", true);
-        dialogo.setSize(400, 250);
-        dialogo.setLocationRelativeTo(this);
-        
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8);
-        gbc.anchor = GridBagConstraints.WEST;
-        
-        // Campos del formulario
-        gbc.gridx = 0; gbc.gridy = 0;
-        panel.add(new JLabel("Codigo:"), gbc);
-        gbc.gridx = 1;
-        JTextField txtCodigo = new JTextField(15);
-        panel.add(txtCodigo, gbc);
-        
-        gbc.gridx = 0; gbc.gridy = 1;
-        panel.add(new JLabel("Nombre:"), gbc);
-        gbc.gridx = 1;
-        JTextField txtNombre = new JTextField(15);
-        panel.add(txtNombre, gbc);
-        
-        gbc.gridx = 0; gbc.gridy = 2;
-        panel.add(new JLabel("Ubicacion:"), gbc);
-        gbc.gridx = 1;
-        JTextField txtUbicacion = new JTextField(15);
-        panel.add(txtUbicacion, gbc);
-        
-        // Botones
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(20, 8, 8, 8);
-        
-        JPanel panelBotones = new JPanel();
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnCancelar = new JButton("Cancelar");
-        
-        btnGuardar.addActionListener(e -> {
-            String codigo = txtCodigo.getText().trim();
-            String nombre = txtNombre.getText().trim();
-            String ubicacion = txtUbicacion.getText().trim();
-            
-            if (codigo.isEmpty() || nombre.isEmpty() || ubicacion.isEmpty()) {
-                JOptionPane.showMessageDialog(dialogo, "Todos los campos son obligatorios");
-                return;
-            }
-            
-            if (inmobiliaria.getProyectos().containsKey(codigo)) {
-                JOptionPane.showMessageDialog(dialogo, "Ya existe un proyecto con ese codigo");
-                return;
-            }
-            
-            Proyecto proyecto = new Proyecto(codigo, nombre, ubicacion);
-            inmobiliaria.agregarProyecto(codigo, proyecto);
-            
-            JOptionPane.showMessageDialog(dialogo, "Proyecto agregado exitosamente");
-            dialogo.dispose();
-            actualizarLista();
-        });
-        
-        btnCancelar.addActionListener(e -> dialogo.dispose());
-        
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnCancelar);
-        panel.add(panelBotones, gbc);
-        
-        dialogo.add(panel);
-        dialogo.setVisible(true);
-    }
-    
-    private void agregarDepartamento() {
-        // Primero verificar si hay proyectos
-        if (inmobiliaria.getProyectos().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Primero debe crear al menos un proyecto");
-            return;
-        }
-        
-        JDialog dialogo = new JDialog(this, "Agregar Departamento", true);
-        dialogo.setSize(400, 280);
-        dialogo.setLocationRelativeTo(this);
-        
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8);
-        gbc.anchor = GridBagConstraints.WEST;
-        
-        // Seleccion de proyecto
-        gbc.gridx = 0; gbc.gridy = 0;
-        panel.add(new JLabel("Proyecto:"), gbc);
-        gbc.gridx = 1;
-        
-        JComboBox<String> comboProyectos = new JComboBox<>();
-        for (String codigo : inmobiliaria.getProyectos().keySet()) {
-            Proyecto p = inmobiliaria.getProyectos().get(codigo);
-            comboProyectos.addItem(codigo + " - " + p.getNombre());
-        }
-        panel.add(comboProyectos, gbc);
-        
-        // Numero del departamento
-        gbc.gridx = 0; gbc.gridy = 1;
-        panel.add(new JLabel("Numero:"), gbc);
-        gbc.gridx = 1;
-        JTextField txtNumero = new JTextField(15);
-        panel.add(txtNumero, gbc);
-        
-        // Precio
-        gbc.gridx = 0; gbc.gridy = 2;
-        panel.add(new JLabel("Precio:"), gbc);
-        gbc.gridx = 1;
-        JTextField txtPrecio = new JTextField(15);
-        panel.add(txtPrecio, gbc);
-        
-        // Botones
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(20, 8, 8, 8);
-        
-        JPanel panelBotones = new JPanel();
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnCancelar = new JButton("Cancelar");
-        
-        btnGuardar.addActionListener(e -> {
-            try {
-                String selectedItem = (String) comboProyectos.getSelectedItem();
-                String codigoProyecto = selectedItem.split(" - ")[0];
-                
-                int numero = Integer.parseInt(txtNumero.getText().trim());
-                double precio = Double.parseDouble(txtPrecio.getText().trim());
-                
-                Proyecto proyecto = inmobiliaria.getProyectos().get(codigoProyecto);
-                
-                // Verificar si ya existe departamento con ese numero
-                if (proyecto.buscarDepartamento(numero) != null) {
-                    JOptionPane.showMessageDialog(dialogo, "Ya existe un departamento con ese numero en el proyecto");
-                    return;
-                }
-                
-                Departamento depto = new Departamento(numero, precio);
-                proyecto.agregarDepartamento(depto);
-                
-                JOptionPane.showMessageDialog(dialogo, "Departamento agregado exitosamente");
-                dialogo.dispose();
-                actualizarLista();
-                
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(dialogo, "El numero y precio deben ser valores numericos validos");
-            }
-        });
-        
-        btnCancelar.addActionListener(e -> dialogo.dispose());
-        
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnCancelar);
-        panel.add(panelBotones, gbc);
-        
-        dialogo.add(panel);
-        dialogo.setVisible(true);
-    }
-}
-
-
 
                 
 
