@@ -1,0 +1,39 @@
+package modelo;
+
+import java.util.*;
+
+public class GestorDemanda {
+    
+    public static void analizarDemandaProyecto(Proyecto proyecto) {
+        System.out.println("=== ANALISIS DE DEMANDA: " + proyecto.getNombre() + " ===");
+        System.out.println("Demanda promedio: " + String.format("%.2f", proyecto.getDemandaPromedio()));
+        
+        // Ordenamiento simple con bubble sort
+        List<Departamento> deptos = new ArrayList<>(proyecto.getDepartamentos());
+        for (int i = 0; i < deptos.size() - 1; i++) {
+            for (int j = 0; j < deptos.size() - i - 1; j++) {
+                if (deptos.get(j).getContadorConsultas() < deptos.get(j + 1).getContadorConsultas()) {
+                    Departamento temp = deptos.get(j);
+                    deptos.set(j, deptos.get(j + 1));
+                    deptos.set(j + 1, temp);
+                }
+            }
+        }
+        
+        for (int i = 0; i < deptos.size(); i++) {
+            Departamento depto = deptos.get(i);
+            System.out.println("Depto #" + depto.getNumero() + 
+                " - Consultas: " + depto.getContadorConsultas() +
+                " - Factor demanda: " + depto.getFactorDemanda() + "x" +
+                " - Precio actual: $" + String.format("%.2f", depto.getPrecioActual()));
+        }
+    }
+    
+    // Excepcion personalizada
+    public static class DemandaException extends Exception {
+        public DemandaException(String mensaje) {
+            super(mensaje);
+        }
+    }
+}
+
