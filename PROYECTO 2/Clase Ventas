@@ -1,0 +1,28 @@
+package modelo;
+
+public class Venta {
+    private static int contadorId = 1;
+    private int id;
+    private Departamento departamento;
+    private Cliente cliente;
+    private double precioVenta;
+
+    public Venta(Departamento departamento, Cliente cliente, double precioVenta) {
+        this.id = contadorId++;
+        this.departamento = departamento;
+        this.cliente = cliente;
+        this.precioVenta = precioVenta;
+        this.departamento.setVendido(true);
+    }
+
+    // Getters
+    public int getId() { return id; }
+    public Departamento getDepartamento() { return departamento; }
+    public Cliente getCliente() { return cliente; }
+    public double getPrecioVenta() { return precioVenta; }
+
+    public String toString() {
+        return "Venta #" + id + " - " + cliente.getNombre() + " - Depto #" + departamento.getNumero();
+    }
+}
+
