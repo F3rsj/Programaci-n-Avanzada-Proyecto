@@ -1,0 +1,318 @@
+package main;
+
+import java.io.*;
+import java.util.*;
+import modelo.*;
+
+
+public class MenuConsola {
+    private Inmobiliaria inmobiliaria;
+    private BufferedReader reader;
+    
+    public MenuConsola(Inmobiliaria inmobiliaria) {
+        this.inmobiliaria = inmobiliaria;
+        this.reader = new BufferedReader(new InputStreamReader(System.in));
+    }
+    
+    public void ejecutar() {
+        int opcion;
+        do {
+            System.out.println("\n=== SISTEMA INMOBILIARIO (CONSOLA) ===");
+            System.out.println("1. Gestion de Departamentos");
+            System.out.println("2. Gestion de Proyectos");
+            System.out.println("3. Buscar elementos");
+            System.out.println("4. Funcionalidad especial - Filtrado");
+            System.out.println("5. Salir");
+            System.out.print("Seleccione: ");
+            
+            try {
+                opcion = Integer.parseInt(reader.readLine());
+                
+                if(opcion == 1) {
+                    gestionDepartamentos();
+                } else if(opcion == 2) {
+                    gestionProyectos();
+                } else if(opcion == 3) {
+                    buscarElementos();
+                } else if(opcion == 4) {
+                    funcionalidadFiltrado();
+                } else if(opcion == 5) {
+                    System.out.println("Saliendo...");
+                } else {
+                    System.out.println("Opcion no valida");
+                }
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+                opcion = 0;
+            }
+        } while(opcion != 5);
+    }
+    
+    private void gestionDepartamentos() {
+        int opcion;
+        do {
+            System.out.println("\n--- GESTION DE DEPARTAMENTOS ---");
+            System.out.println("1. Agregar departamento");
+            System.out.println("2. Mostrar departamentos");
+            System.out.println("3. Editar departamento");
+            System.out.println("4. Eliminar departamento");
+            System.out.println("5. Volver");
+            System.out.print("Seleccione: ");
+            
+            try {
+                opcion = Integer.parseInt(reader.readLine());
+                
+                if(opcion == 1) {
+                    agregarDepartamento();
+                } else if(opcion == 2) {
+                    mostrarDepartamentos();
+                } else if(opcion == 3) {
+                    editarDepartamento();
+                } else if(opcion == 4) {
+                    eliminarDepartamento();
+                } else if(opcion == 5) {
+                    return;
+                } else {
+                    System.out.println("Opcion no valida");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un numero valido");
+                opcion = 0;
+            } catch (IOException e) {
+                System.out.println("Error de entrada: " + e.getMessage());
+                opcion = 0;
+            }
+        } while(true);
+    }
+    
+    private void agregarDepartamento() {
+        try {
+            System.out.print("Numero de departamento: ");
+            int numero = Integer.parseInt(reader.readLine());
+            System.out.print("Precio base: ");
+            double precio = Double.parseDouble(reader.readLine());
+            
+            Departamento depto = new Departamento(numero, precio);
+            
+            System.out.print("Codigo del proyecto: ");
+            String codigo = reader.readLine();
+            
+            if (inmobiliaria.getProyectos().containsKey(codigo)) {
+                inmobiliaria.getProyectos().get(codigo).agregarDepartamento(depto);
+                System.out.println("Departamento agregado exitosamente");
+            } else {
+                System.out.println("Proyecto no encontrado: " + codigo);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error en formato de numero");
+        } catch (IOException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+        }
+    }
+    
+    private void mostrarDepartamentos() {
+        System.out.println("\n--- LISTA DE DEPARTAMENTOS ---");
+        Map<String, Proyecto> proyectos = inmobiliaria.getProyectos();
+        String[] codigos = proyectos.keySet().toArray(new String[0]);
+        
+        for (int i = 0; i < codigos.length; i++) {
+            Proyecto proyecto = proyectos.get(codigos[i]);
+            System.out.println("Proyecto: " + proyecto.getNombre());
+            List<Departamento> departamentos = proyecto.getDepartamentos();
+            for (int j = 0; j < departamentos.size(); j++) {
+                Departamento depto = departamentos.get(j);
+                System.out.println("  - " + depto.toString());
+            }
+        }
+    }
+    
+    private void editarDepartamento() {
+        try {
+            System.out.print("Numero de departamento a editar: ");
+            int numero = Integer.parseInt(reader.readLine());
+            
+            Departamento depto = inmobiliaria.buscarDepartamentoPorNumero(numero);
+            if (depto != null) {
+                System.out.print("Nuevo precio (actual: " + depto.getPrecioBase() + "): ");
+                double nuevoPrecio = Double.parseDouble(reader.readLine());
+                depto.setPrecioBase(nuevoPrecio);
+                System.out.println("Departamento actualizado");
+            } else {
+                System.out.println("Departamento no encontrado");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error en formato de numero");
+        } catch (IOException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+        }
+    }
+    
+    private void eliminarDepartamento() {
+        try {
+            System.out.print("Numero de departamento a eliminar: ");
+            int numero = Integer.parseInt(reader.readLine());
+            
+            boolean eliminado = false;
+            Map<String, Proyecto> proyectos = inmobiliaria.getProyectos();
+            String[] codigos = proyectos.keySet().toArray(new String[0]);
+            
+            for (int i = 0; i < codigos.length && !eliminado; i++) {
+                Proyecto proyecto = proyectos.get(codigos[i]);
+                if (proyecto.eliminarDepartamento(numero)) {
+                    eliminado = true;
+                }
+            }
+            
+            if (eliminado) {
+                System.out.println("Departamento eliminado");
+            } else {
+                System.out.println("Departamento no encontrado");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error en formato de numero");
+        } catch (IOException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+        }
+    }
+    
+    private void gestionProyectos() {
+        int opcion;
+        do {
+            System.out.println("\n--- GESTION DE PROYECTOS ---");
+            System.out.println("1. Agregar proyecto");
+            System.out.println("2. Mostrar proyectos");
+            System.out.println("3. Editar proyecto");
+            System.out.println("4. Eliminar proyecto");
+            System.out.println("5. Volver");
+            System.out.print("Seleccione: ");
+            
+            try {
+                opcion = Integer.parseInt(reader.readLine());
+                
+                if(opcion == 1) {
+                    agregarProyecto();
+                } else if(opcion == 2) {
+                    mostrarProyectos();
+                } else if(opcion == 3) {
+                    editarProyecto();
+                } else if(opcion == 4) {
+                    eliminarProyecto();
+                } else if(opcion == 5) {
+                    return;
+                } else {
+                    System.out.println("Opcion no valida");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un numero valido");
+                opcion = 0;
+            } catch (IOException e) {
+                System.out.println("Error de entrada: " + e.getMessage());
+                opcion = 0;
+            }
+        } while(true);
+    }
+    
+    private void agregarProyecto() {
+        try {
+            System.out.print("Codigo: ");
+            String codigo = reader.readLine();
+            System.out.print("Nombre: ");
+            String nombre = reader.readLine();
+            System.out.print("Ubicacion: ");
+            String ubicacion = reader.readLine();
+            
+            Proyecto proyecto = new Proyecto(codigo, nombre, ubicacion);
+            inmobiliaria.agregarProyecto(codigo, proyecto);
+            System.out.println("Proyecto agregado");
+        } catch (IOException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+        }
+    }
+    
+    private void mostrarProyectos() {
+        System.out.println("\n--- LISTA DE PROYECTOS ---");
+        Map<String, Proyecto> proyectos = inmobiliaria.getProyectos();
+        String[] codigos = proyectos.keySet().toArray(new String[0]);
+        
+        for (int i = 0; i < codigos.length; i++) {
+            Proyecto proyecto = proyectos.get(codigos[i]);
+            System.out.println(proyecto.toString());
+        }
+    }
+    
+    private void editarProyecto() {
+        try {
+            System.out.print("Codigo del proyecto a editar: ");
+            String codigo = reader.readLine();
+            
+            Proyecto proyecto = inmobiliaria.getProyectos().get(codigo);
+            if (proyecto != null) {
+                System.out.print("Nuevo nombre (actual: " + proyecto.getNombre() + "): ");
+                proyecto.setNombre(reader.readLine());
+                System.out.print("Nueva ubicacion (actual: " + proyecto.getUbicacion() + "): ");
+                proyecto.setUbicacion(reader.readLine());
+                System.out.println("Proyecto actualizado");
+            } else {
+                System.out.println("Proyecto no encontrado");
+            }
+        } catch (IOException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+        }
+    }
+    
+    private void eliminarProyecto() {
+        try {
+            System.out.print("Codigo del proyecto a eliminar: ");
+            String codigo = reader.readLine();
+            inmobiliaria.eliminarProyecto(codigo);
+            System.out.println("Proyecto eliminado");
+        } catch (IOException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+        }
+    }
+    
+    private void buscarElementos() {
+        System.out.println("\n--- BUSQUEDA ---");
+        System.out.print("Numero de departamento a buscar: ");
+        try {
+            int numero = Integer.parseInt(reader.readLine());
+            Departamento depto = inmobiliaria.buscarDepartamentoPorNumero(numero);
+            if (depto != null) {
+                System.out.println("Encontrado: " + depto.toString());
+            } else {
+                System.out.println("No encontrado");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error en formato de numero");
+        } catch (IOException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+        }
+    }
+    
+    private void funcionalidadFiltrado() {
+        try {
+            System.out.print("Precio maximo para filtrar: ");
+            double precioMax = Double.parseDouble(reader.readLine());
+            
+            System.out.println("\n--- DEPARTAMENTOS DISPONIBLES (precio <= $" + precioMax + ") ---");
+            Map<String, Proyecto> proyectos = inmobiliaria.getProyectos();
+            String[] codigos = proyectos.keySet().toArray(new String[0]);
+            
+            for (int i = 0; i < codigos.length; i++) {
+                Proyecto proyecto = proyectos.get(codigos[i]);
+                List<Departamento> departamentos = proyecto.getDepartamentos();
+                for (int j = 0; j < departamentos.size(); j++) {
+                    Departamento depto;
+                    depto = departamentos.get(j);
+                    if (!depto.isVendido() && depto.getPrecioBase() <= precioMax) {
+                        System.out.println(proyecto.getNombre() + " - " + depto.toString());
+                    }
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error en formato de precio");
+        } catch (IOException e) {
+            System.out.println("Error de entrada: " + e.getMessage());
+        }
+    }
+}
