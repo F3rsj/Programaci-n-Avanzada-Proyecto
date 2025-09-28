@@ -1,1 +1,8 @@
+package excepciones;
+
+public class DepartamentoVendidoException extends Exception {
+    public DepartamentoVendidoException(String mensaje) {
+        super(mensaje);
+    }
+}
 
