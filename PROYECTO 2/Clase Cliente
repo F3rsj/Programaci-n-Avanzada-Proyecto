@@ -1,37 +1,26 @@
-package clases;
+package modelo;
 
 public class Cliente {
     private String rut;
     private String nombre;
-    private int presupuesto;
-    
-    public Cliente(String rut, String nombre, int presupuesto) {
+    private String telefono;
+
+    public Cliente(String rut, String nombre, String telefono) {
         this.rut = rut;
         this.nombre = nombre;
-        this.presupuesto = presupuesto;
+        this.telefono = telefono;
     }
 
-    public String getRut() {
-        return rut;
-    }
+    // Getters y setters
+    public String getRut() { return rut; }
+    public void setRut(String rut) { this.rut = rut; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public int getPresupuesto() {
-        return presupuesto;
-    }
-
-    public void setRut(String rut) {
-        this.rut = rut;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setPresupuesto(int presupuesto) {
-        this.presupuesto = presupuesto;
+    public String toString() {
+        return nombre + " (" + rut + ") - Tel: " + telefono;
     }
 }
+
