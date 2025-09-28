@@ -1,1 +1,37 @@
+package util;
 
+import modelo.Departamento;
+import java.util.*;
+
+public class GestorDepartamentos {
+    private List<Departamento> departamentos;
+    
+    public GestorDepartamentos() {
+        this.departamentos = new ArrayList<>();
+    }
+    
+    // SOBRECARGA de métodos - Diferentes formas de agregar
+    public void agregarDepartamento(Departamento depto) {
+        departamentos.add(depto);
+    }
+    
+    public void agregarDepartamento(List<Departamento> listaDepartamentos) {
+        departamentos.addAll(listaDepartamentos);
+    }
+    
+    // SOBRECARGA de búsquedas
+    public Departamento buscarPorNumero(int numero) {
+        for (Departamento depto : departamentos) {
+            if (depto.getNumero() == numero) return depto;
+        }
+        return null;
+    }
+    
+    public List<Departamento> buscarPorPrecio(double precioMax) {
+        List<Departamento> resultado = new ArrayList<>();
+        for (Departamento depto : departamentos) {
+            if (depto.getPrecioBase() <= precioMax) resultado.add(depto);
+        }
+        return resultado;
+    }
+}
