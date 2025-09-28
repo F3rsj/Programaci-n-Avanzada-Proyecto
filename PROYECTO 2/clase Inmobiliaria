@@ -1,1 +1,61 @@
+package modelo;
+
+import java.util.*;
+
+public class Inmobiliaria {
+    private String nombre;
+    private final Map<String, Proyecto> proyectos;
+    private final Map<String, Cliente> clientes;
+    private final List<Venta> ventas;
+
+    public Inmobiliaria(String nombre) {
+        this.nombre = nombre;
+        this.proyectos = new HashMap<>();
+        this.clientes = new HashMap<>();
+        this.ventas = new ArrayList<>();
+    }
+
+    // Getters y setters
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public Map<String, Proyecto> getProyectos() { return proyectos; }
+    public List<Venta> getVentas() { return ventas; }
+    public Map<String, Cliente> getClientes() { return clientes; }
+
+    // Gestion de proyectos
+    public void agregarProyecto(String codigo, Proyecto proyecto) {
+        proyectos.put(codigo, proyecto);
+    }
+
+    public void eliminarProyecto(String codigo) {
+        proyectos.remove(codigo);
+    }
+
+    // Gestion de clientes
+    public void agregarCliente(String rut, Cliente cliente) {
+        clientes.put(rut, cliente);
+    }
+
+    public Cliente buscarCliente(String rut) {
+        return clientes.get(rut);
+    }
+
+    // Gestion de ventas
+    public void registrarVenta(Venta venta) {
+        ventas.add(venta);
+    }
+
+    // Busquedas
+    public Departamento buscarDepartamentoPorNumero(int numero) {
+        for (Proyecto proyecto : proyectos.values()) {
+            Departamento depto = proyecto.buscarDepartamento(numero);
+            if (depto != null) return depto;
+        }
+        return null;
+    }
+
+    public String toString() {
+        return "Inmobiliaria: " + nombre;
+    }
+}
 
