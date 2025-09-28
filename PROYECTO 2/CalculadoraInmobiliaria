@@ -1,1 +1,20 @@
+package util;
+
+import modelo.*;
+
+public class CalculadoraInmobiliaria {
+    
+    // SOBRECARGA de métodos - Diferentes formas de calcular comisión
+    public double calcularComision(double precioVenta) {
+        return precioVenta * 0.03; // 3% por defecto
+    }
+    
+    public double calcularComision(double precioVenta, double porcentaje) {
+        return precioVenta * (porcentaje / 100); // Porcentaje personalizado
+    }
+    
+    public double calcularComision(Venta venta) {
+        return venta.getPrecioVenta() * 0.03; // Desde objeto Venta
+    }
+}
 
