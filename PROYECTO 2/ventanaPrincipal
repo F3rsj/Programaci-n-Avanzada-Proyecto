@@ -1,4 +1,3 @@
-//FUNCIONA, Falta revisar y subir lo demas :)
 package vista;
 
 import modelo.*;
@@ -564,4 +563,3 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 }
 
                 
-
