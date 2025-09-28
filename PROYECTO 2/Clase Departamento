@@ -1,37 +1,66 @@
-package clases;
+//clase Depatamento
+package modelo;
 
 public class Departamento {
-    private int numeroDepartamento;
-    private boolean vendido; 
-    private Cliente clienteComprador;
+    private int numero;
+    private double precioBase;
+    private boolean vendido;
+    private int contadorConsultas;
+    private double factorDemanda;
 
-    public Departamento(int numeroDepartamento, boolean vendido, Cliente clienteComprador) {
-        this.numeroDepartamento = numeroDepartamento;
+    public Departamento(int numero, double precioBase) {
+        this.numero = numero;
+        this.precioBase = precioBase;
         this.vendido = false;
-        this.clienteComprador = null;
+        this.contadorConsultas = 0;
+        this.factorDemanda = 1.0;
     }
 
-    public int getNumeroDepartamento() {
-        return numeroDepartamento;
+    // Getters y setters
+    public int getNumero() { return numero; }
+    public void setNumero(int numero) { this.numero = numero; }
+    public double getPrecioBase() { return precioBase; }
+    public void setPrecioBase(double precioBase) { this.precioBase = precioBase; }
+    public boolean isVendido() { return vendido; }
+    public void setVendido(boolean vendido) { this.vendido = vendido; }
+    public int getContadorConsultas() { return contadorConsultas; }
+    public double getFactorDemanda() { return factorDemanda; }
+
+    // Metodos sobrecargados 
+    public double getPrecioActual() {
+        return precioBase * factorDemanda;
+    }
+    
+    public double getPrecioActual(boolean incluirImpuestos) {
+        double precio = precioBase * factorDemanda;
+        if(incluirImpuestos) {
+            return precio * 1.19;
+        } else {
+            return precio;
+        }
+    }
+     public void registrarConsulta() {
+        contadorConsultas++;
+        actualizarFactorDemanda();
     }
 
-    public void setNumeroDepartamento(int numeroDepartamento) {
-        this.numeroDepartamento = numeroDepartamento;
+    private void actualizarFactorDemanda() {
+        if (contadorConsultas > 20) {
+            factorDemanda = 1.5;
+        } else if (contadorConsultas > 10) {
+            factorDemanda = 1.3;
+        } else if (contadorConsultas > 5) {
+            factorDemanda = 1.15;
+        }
     }
 
-    public boolean isVendido() {
-        return vendido;
-    }
-
-    public void setVendido(boolean vendido) {
-        this.vendido = vendido;
-    }
-
-    public Cliente getClienteComprador() {
-        return clienteComprador;
-    }
-
-    public void setClienteComprador(Cliente clienteComprador) {
-        this.clienteComprador = clienteComprador;
+    public String toString() {
+        String estado;
+        if(vendido) {
+            estado = "VENDIDO";
+        } else {
+            estado = "DISPONIBLE";
+        }
+        return "Depto #" + numero + " - $" + precioBase + " - Consultas: " + contadorConsultas + " - " + estado;
     }
 }
