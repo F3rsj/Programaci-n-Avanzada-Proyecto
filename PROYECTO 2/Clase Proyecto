@@ -1,37 +1,91 @@
-package clases;
+package modelo;
 
-public class Departamento {
-    private int numeroDepartamento;
-    private boolean vendido; 
-    private Cliente clienteComprador;
+import java.util.*;
 
-    public Departamento(int numeroDepartamento, boolean vendido, Cliente clienteComprador) {
-        this.numeroDepartamento = numeroDepartamento;
-        this.vendido = false;
-        this.clienteComprador = null;
+public class Proyecto {
+    private String codigo;
+    private String nombre;
+    private String ubicacion;
+    private final List<Departamento> departamentos;
+
+    public Proyecto(String codigo, String nombre, String ubicacion) {
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.ubicacion = ubicacion;
+        this.departamentos = new ArrayList<>();
     }
 
-    public int getNumeroDepartamento() {
-        return numeroDepartamento;
+    // Getters y setters
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getUbicacion() { return ubicacion; }
+    public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
+    public List<Departamento> getDepartamentos() { return departamentos; }
+
+    // Metodos sobrecargados para SIA1.6
+    public boolean agregarDepartamento(Departamento departamento) {
+        return departamentos.add(departamento);
+    }
+    
+    public boolean agregarDepartamento(int numero, double precioBase) {
+        Departamento depto = new Departamento(numero, precioBase);
+        return departamentos.add(depto);
     }
 
-    public void setNumeroDepartamento(int numeroDepartamento) {
-        this.numeroDepartamento = numeroDepartamento;
+    public boolean eliminarDepartamento(int numero) {
+        for (int i = 0; i < departamentos.size(); i++) {
+            if (departamentos.get(i).getNumero() == numero) {
+                departamentos.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
-    public boolean isVendido() {
-        return vendido;
+    public Departamento buscarDepartamento(int numero) {
+        for (int i = 0; i < departamentos.size(); i++) {
+            Departamento depto = departamentos.get(i);
+            if (depto.getNumero() == numero) {
+                return depto;
+            }
+        }
+        return null;
     }
 
-    public void setVendido(boolean vendido) {
-        this.vendido = vendido;
+    public int getTotalDepartamentos() {
+        return departamentos.size();
     }
 
-    public Cliente getClienteComprador() {
-        return clienteComprador;
+    public int getDepartamentosVendidos() {
+        int contador = 0;
+        for (int i = 0; i < departamentos.size(); i++) {
+            if (departamentos.get(i).isVendido()) {
+                contador++;
+            }
+        }
+        return contador;
     }
 
-    public void setClienteComprador(Cliente clienteComprador) {
-        this.clienteComprador = clienteComprador;
+    public double getPorcentajeVendido() {
+        if (departamentos.size() == 0) {
+            return 0;
+        }
+        return (getDepartamentosVendidos() * 100.0) / departamentos.size();
+    }
+
+    public double getDemandaPromedio() {
+        if (departamentos.size() == 0) return 0;
+        
+        double suma = 0;
+        for (int i = 0; i < departamentos.size(); i++) {
+            suma += departamentos.get(i).getContadorConsultas();
+        }
+        return suma / departamentos.size();
+    }
+
+    public String toString() {
+        return nombre + " - Deptos: " + getTotalDepartamentos() + " - Vendidos: " + getDepartamentosVendidos();
     }
 }
