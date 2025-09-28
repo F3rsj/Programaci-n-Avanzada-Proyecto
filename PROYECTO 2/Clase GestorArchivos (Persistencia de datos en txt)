@@ -1,1 +1,110 @@
 
+package persistencia;
+
+import modelo.*;
+import java.io.*;
+import java.util.*;
+
+public class GestorArchivos {
+    private static final String ARCHIVO_DEPTOS = "departamentos.txt";
+    private static final String ARCHIVO_PROYECTOS = "proyectos.txt";
+    private static final String ARCHIVO_REPORTE = "reporteVentas.txt";
+    
+    // Cargar datos al iniciar
+    public static void cargarDatos(Inmobiliaria inmobiliaria) {
+        try {
+            cargarProyectos(inmobiliaria);
+            cargarDepartamentos(inmobiliaria);
+        } catch (IOException e) {
+            System.out.println("Error cargando datos: " + e.getMessage());
+        }
+    }
+    
+    // Guardar datos al salir
+    public static void guardarDatos(Inmobiliaria inmobiliaria) {
+        try {
+            guardarProyectos(inmobiliaria);
+            guardarDepartamentos(inmobiliaria);
+            generarReporte(inmobiliaria);
+        } catch (IOException e) {
+            System.out.println("Error guardando datos: " + e.getMessage());
+        }
+    }
+    
+    private static void cargarProyectos(Inmobiliaria inmobiliaria) throws IOException {
+        File archivo = new File(ARCHIVO_PROYECTOS);
+        if (!archivo.exists()) return;
+        
+        BufferedReader br = new BufferedReader(new FileReader(archivo));
+        String linea;
+        while ((linea = br.readLine()) != null) {
+            String[] datos = linea.split(";");
+            if (datos.length >= 3) {
+                Proyecto proyecto = new Proyecto(datos[0], datos[1], datos[2]);
+                inmobiliaria.agregarProyecto(datos[0], proyecto);
+            }
+        }
+        br.close();
+    }
+    
+    private static void guardarProyectos(Inmobiliaria inmobiliaria) throws IOException {
+        PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_PROYECTOS));
+        for (Proyecto proyecto : inmobiliaria.getProyectos().values()) {
+            pw.println(proyecto.getCodigo() + ";" + proyecto.getNombre() + ";" + proyecto.getUbicacion());
+        }
+        pw.close();
+    }
+        private static void cargarDepartamentos(Inmobiliaria inmobiliaria) throws IOException {
+        File archivo = new File(ARCHIVO_DEPTOS);
+        if (!archivo.exists()) return;
+        
+        BufferedReader br = new BufferedReader(new FileReader(archivo));
+        String linea;
+        while ((linea = br.readLine()) != null) {
+            String[] datos = linea.split(";");
+            if (datos.length >= 5) {
+                String codigoProyecto = datos[0];
+                int numero = Integer.parseInt(datos[1]);
+                double precio = Double.parseDouble(datos[2]);
+                boolean vendido = Boolean.parseBoolean(datos[3]);
+                int consultas = Integer.parseInt(datos[4]);
+                
+                Proyecto proyecto = inmobiliaria.getProyectos().get(codigoProyecto);
+                if (proyecto != null) {
+                    Departamento depto = new Departamento(numero, precio);
+                    depto.setVendido(vendido);
+                    for (int i = 0; i < consultas; i++) {
+                        depto.registrarConsulta();
+                    }
+                    proyecto.agregarDepartamento(depto);
+                }
+            }
+        }
+        br.close();
+    }
+    
+    private static void guardarDepartamentos(Inmobiliaria inmobiliaria) throws IOException {
+        PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_DEPTOS));
+        for (Proyecto proyecto : inmobiliaria.getProyectos().values()) {
+            for (Departamento depto : proyecto.getDepartamentos()) {
+                pw.println(proyecto.getCodigo() + ";" + depto.getNumero() + ";" + depto.getPrecioBase() + ";" + depto.isVendido() + ";" + depto.getContadorConsultas());
+            }
+        }
+        pw.close();
+    }
+    
+    // Generar reporte en TXT
+    public static void generarReporte(Inmobiliaria inmobiliaria) throws IOException {
+        PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_REPORTE));
+        pw.println("=== REPORTE INMOBILIARIA ===");
+        pw.println("Total proyectos: " + inmobiliaria.getProyectos().size());
+        pw.println("Total ventas: " + inmobiliaria.getVentas().size());
+        
+        for (Proyecto proyecto : inmobiliaria.getProyectos().values()) {
+            pw.println("\nProyecto: " + proyecto.getNombre());
+            pw.println("Departamentos: " + proyecto.getTotalDepartamentos() + 
+                      " - Vendidos: " + proyecto.getDepartamentosVendidos());
+        }
+        pw.close();
+    }
+}
